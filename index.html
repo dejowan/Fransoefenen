@@ -1,56 +1,33 @@
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<!DOCTYPE html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>
 <title>Franse Woordjes</title>
 <style>
-body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;max-width:700px;margin:auto;padding:20px}
-button{padding:12px 16px;margin:5px;font-size:16px}
-.card{border:1px solid #ccc;border-radius:10px;padding:20px;margin-top:20px}
-</style>
-</head>
-<body>
-<h1>Franse Woordjes</h1>
-<p>Kies een richting en voeg indien gewenst de volledige woordenlijst toe.</p>
-<div class="card">
-<button onclick="start('frnl')">Frans → Nederlands</button>
-<button onclick="start('nlfr')">Nederlands → Frans</button>
-</div>
-<div id="app"></div>
+body{font-family:-apple-system,sans-serif;max-width:700px;margin:auto;padding:20px;background:#f5f7fa}
+.card{background:white;border-radius:16px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+button{padding:14px 18px;border:none;border-radius:12px;font-size:16px;margin:5px}
+.primary{background:#007aff;color:white} .good{background:#34c759;color:white} .bad{background:#ff3b30;color:white}
+#progress{height:12px;background:#ddd;border-radius:8px;overflow:hidden} #bar{height:12px;background:#007aff;width:0%}
+</style></head><body>
+<h1>🇫🇷 Franse Woordjes</h1>
+<div class='card' id='app'></div>
 <script>
-const woorden=[
-["un agent de police","een politieagent"],
-["agréable","aangenaam"],
-["appeler","(op)bellen"],
-["apprendre","(aan)leren"],
-["un après-midi","een namiddag"]
-];
-let lijst=[],idx=0,fouten=[],richting='frnl';
-function start(r){
- richting=r; lijst=[...woorden].sort(()=>Math.random()-0.5); idx=0; fouten=[]; toon();
-}
+const woorden=[['un agent de police', 'een politieagent'], ['agréable', 'aangenaam'], ['appeler', '(op)bellen'], ['apprendre', '(aan)leren'], ['un après-midi', 'een namiddag'], ['un arbre', 'een boom'], ['l’argent de poche', 'het zakgeld'], ['arriver', 'aankomen'], ['assez', 'genoeg'], ['une assiette', 'een bord'], ['un bain', 'een bad'], ['un ballon', 'een bal'], ['un bateau', 'een boot'], ['un bébé', 'een baby'], ['un bonnet', 'een (bad)muts'], ['un bras', 'een arm'], ['une caisse', 'een kassa'], ['un camion', 'een vrachtwagen'], ['un carrefour', 'een kruispunt'], ['un chèque-cadeau', 'een geschenkbon'], ['un coin', 'een hoek'], ['courir', 'lopen'], ['un cours', 'een les'], ['un crayon', 'een potlood'], ['une crêpe', 'een pannenkoek'], ['décorer', 'versieren'], ['devoir', 'moeten'], ['donner', 'geven'], ['dormir', 'slapen'], ['la douleur', 'de pijn'], ['un(e) élève', 'een leerling(e)'], ['en face de', 'tegenover'], ['fatigué(e)', 'moe'], ['une fin', 'een einde'], ['entre', 'tussen'], ['envoyer', '(op)sturen'], ['essayer', 'proberen'], ['un exemple', 'een voorbeeld'], ['une ferme', 'een boerderij'], ['une fête', 'een feest'], ['une feuille', 'een blad'], ['finir', '(be)eindigen'], ['une forêt', 'een bos'], ['un genou', 'een knie'], ['une glace', 'een ijsje'], ['une guirlande', 'een slinger'], ['une guitare', 'een gitaar'], ['un hôpital', 'een ziekenhuis'], ['un immeuble', 'een flatgebouw'], ['une jupe', 'een rok'], ['un lit', 'een bed'], ['un magazine', 'een tijdschrift'], ['une main', 'een hand'], ['un médicament', 'een geneesmiddel'], ['même', 'zelfs'], ['mettre', 'plaatsen/zetten'], ['un mouton', 'een schaap'], ['un œuf', 'een ei'], ['ouvrir', 'openen'], ['une page', 'een bladzijde'], ['un pantalon', 'een broek'], ['penser à', 'denken aan'], ['peut-être', 'misschien'], ['une phrase', 'een zin'], ['un piano', 'een piano'], ['une plage', 'een strand'], ['plier', 'plooien'], ['une pomme de terre', 'een aardappel'], ['un pont', 'een brug'], ['une poule', 'een kip'], ['un prénom', 'een voornaam'], ['quelque part', 'ergens'], ['quelques', 'enkele'], ['raconter', 'vertellen'], ['un repas', 'een maaltijd'], ['un restaurant', 'een restaurant'], ['un sapin de Noël', 'een kerstboom'], ['une sauce', 'een saus'], ['sauter', 'springen'], ['se laver', 'zich wassen'], ['se lever', 'opstaan'], ['se promener', 'wandelen'], ['soigner', 'verzorgen'], ['les soldes', 'de uitverkoop'], ['une sortie', 'een uitgang'], ['souvent', 'vaak'], ['un tableau', 'een schoolbord'], ['la terre', 'de grond'], ['un toboggan', 'een glijbaan'], ['tomber', 'vallen'], ['toujours', 'altijd'], ['tout de suite', 'onmiddellijk'], ['un tram', 'een tram'], ['travailler', 'werken'], ['une vache', 'een koe'], ['la vaisselle', 'de afwas'], ['une valise', 'een koffer'], ['vendre', 'verkopen'], ['un vêtement', 'een kledingstuk'], ['un violon', 'een viool']];
+let lijst=[],fouten=[],i=0,richting='frnl';
+function home(){
+document.getElementById('app').innerHTML=`<h2>Kies oefening</h2>
+<button class='primary' onclick="start('frnl')">Frans → Nederlands</button>
+<button class='primary' onclick="start('nlfr')">Nederlands → Frans</button>`;}
+function start(r){richting=r;lijst=[...woorden].sort(()=>Math.random()-0.5);fouten=[];i=0;toon();}
 function toon(){
- if(idx>=lijst.length){
-  document.getElementById('app').innerHTML=`<h2>Klaar!</h2><p>Fouten: ${fouten.length}</p>`+
-  (fouten.length?'<button onclick="herhaal()">Oefen foute woorden</button>':'');
-  return;
- }
- let w=lijst[idx];
- let vraag=richting==='frnl'?w[0]:w[1];
- let antw=richting==='frnl'?w[1]:w[0];
- document.getElementById('app').innerHTML=`<div class="card">
- <h2>${vraag}</h2>
- <button onclick="document.getElementById('ans').style.display='block'">Toon antwoord</button>
- <div id="ans" style="display:none">
- <p><b>${antw}</b></p>
- <button onclick="goed()">Juist</button>
- <button onclick="fout()">Fout</button>
- </div></div>`;
-}
-function goed(){idx++;toon();}
-function fout(){fouten.push(lijst[idx]);idx++;toon();}
-function herhaal(){lijst=[...fouten];fouten=[];idx=0;toon();}
-</script>
-</body>
-</html>
+if(i>=lijst.length){document.getElementById('app').innerHTML=`<h2>🎉 Klaar!</h2><p>Score: ${lijst.length-fouten.length}/${lijst.length}</p>${fouten.length?`<button class='primary' onclick='herhaal()'>Oefen ${fouten.length} foute woorden</button>`:''}<br><br><button onclick='home()'>Nieuw spel</button>`;return;}
+let w=lijst[i],v=richting=='frnl'?w[0]:w[1],a=richting=='frnl'?w[1]:w[0];
+let p=Math.round((i/lijst.length)*100);
+document.getElementById('app').innerHTML=`<div id='progress'><div id='bar' style='width:${p}%'></div></div><p>Woord ${i+1} van ${lijst.length}</p><h2>${v}</h2>
+<button class='primary' onclick="document.getElementById('ans').style.display='block'">Toon antwoord</button>
+<div id='ans' style='display:none'><h3>${a}</h3>
+<button class='good' onclick='juist()'>Juist</button>
+<button class='bad' onclick='fout()'>Fout</button></div>`;}
+function juist(){i++;toon();}
+function fout(){fouten.push(lijst[i]);i++;toon();}
+function herhaal(){lijst=[...fouten];fouten=[];i=0;toon();}
+home();
+</script></body></html>
